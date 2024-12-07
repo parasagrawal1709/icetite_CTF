@@ -1,0 +1,35 @@
+---
+import Base from "../layouts/Base.astro";
+import Table from "../layouts/Table.astro";
+import Row from "../components/Row.astro";
+import Navbar from "../components/Navbar.astro";
+
+const { cookies, redirect } = Astro;
+let navMenu: string[] = ["Home", "Leaderboard", "Login"];
+let photo: string = "bg-error";
+
+const accessToken = cookies.get("sb-access-token");
+const refreshToken = cookies.get("sb-refresh-token");
+
+
+if (accessToken && refreshToken) {
+    navMenu = ["Home", "Leaderboard", "Logout"];
+    photo = "bg-success";
+}
+
+const response = await fetch(Astro.url + "/../api/leaderboard/get");
+let leaderboardData = await response.json();
+leaderboardData = leaderboardData.data;
+let i = 1;
+---
+
+<Base>
+    <Navbar title="BOLT CTF" menu={navMenu} photo={photo} slot="navbar" />
+    <Table headings={["Rank", "Name", "Score"]}>
+        {
+            leaderboardData.map((data: { name: string; score: number }) => (
+                <Row rank={i++} name={data.name} score={data.score} />
+            ))
+        }
+    </Table>
+</Base>

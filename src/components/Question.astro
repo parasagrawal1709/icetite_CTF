@@ -1,0 +1,68 @@
+---
+interface Props {
+    id: number;
+    title: string;
+    description: string;
+    link: string;
+    tags: string[];
+}
+
+const { id, title, description, link, tags } = Astro.props;
+---
+
+<div class="w-80 h-48">
+    <button
+        class="btn btn-outline flex-col w-full h-full rounded-xl"
+        onclick=`my_modal_${id}.showModal()`
+    >
+        <div class="text-lg">{title}</div>
+        <div class="flex gap-1">
+            {
+                tags.map((tag) => (
+                    <div class="badge badge-secondary rounded-xl">{tag}</div>
+                ))
+            }
+        </div>
+    </button>
+    <dialog id=`my_modal_${id}` class="modal modal-bottom sm:modal-middle">
+        <div class="modal-box">
+            <h3 class="font-bold text-lg">{title}</h3>
+            <p class="py-4">{description}</p>
+            <div><a href={link} class="link">download</a></div>
+
+            <div class="flex gap-1 mt-5">
+                {
+                    tags.map((tag) => (
+                        <div class="badge badge-secondary rounded-xl">
+                            {tag}
+                        </div>
+                    ))
+                }
+            </div>
+            <!-- Inout box -->
+            <form action="/api/questions/checkFlag" method="post" class="mt-10">
+                <label for="flag" class=""></label>
+                <input
+                    type="text"
+                    id="flag"
+                    name="flag"
+                    placeholder="Bolt{flag}"
+                    class="input input-primary w-full"
+                />
+
+                <button
+                    value={id}
+                    name="id"
+                    type="submit"
+                    class="btn w-full bg-base-300 mt-1"
+                >
+                    Submit
+                </button>
+            </form>
+        </div>
+
+        <form method="dialog" class="modal-backdrop">
+            <button>close</button>
+        </form>
+    </dialog>
+</div>

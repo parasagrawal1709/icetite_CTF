@@ -1,0 +1,22 @@
+---
+interface Props {
+    headings: string[];
+}
+
+const { headings } = Astro.props;
+---
+
+<div class="overflow-x-auto">
+    <table class="table text-center">
+        <!-- head -->
+        <thead>
+            <tr>
+                {headings.map((heading) => <th>{heading}</th>)}
+            </tr>
+        </thead>
+        <tbody>
+            <!-- row 1 -->
+            <slot />
+        </tbody>
+    </table>
+</div>
